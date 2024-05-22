@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendekin - Kalian Bisa Pakai Ini Untuk Pendekin Setiap Link Panjang Anda</title>
+    <link rel="icon" href="https://vndal.site/images/favicon.png" type="image/png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .logo {
+            width: 25%; /* Mengatur ukuran logo menjadi 25% dari ukuran aslinya */
+        }
+        @media (max-width: 768px) {
+            .logo {
+                width: 176px; /* Mengatur lebar logo menjadi 150px pada perangkat mobile */
+                height: 35px; /* Mengatur tinggi logo menjadi 50px pada perangkat mobile */
+            }
+        }
+    </style>
+</head>
+<body class="bg-dark text-white">
+    <header class="d-flex justify-content-between align-items-center bg-dark p-3">
+        <a href="#" class="navbar-brand">
+            <img src="https://vndal.site/images/pendekin-logo-final-layout.png" alt="Logo" class="logo">
+        </a>
+        <a href="/login" class="btn btn-success">Login</a>
+    </header>
+    <div class="container text-center mt-5">
+        <h1 class="mt-5">Pendekin Link Mu Disini</h1>
+        <form id="shorten-form">
+            <div class="form-group mb-3">
+                <input type="url" class="form-control" id="original_url" placeholder="Masukkan URL" required>
+            </div>
+            <button type="submit" class="btn btn-success">Shorten</button>
+        </form>
+        <div class="mt-3" id="result"></div>
+    </div>
+    <footer class="footer bg-dark text-white text-center py-3">
+        <span>&copy; 2024 Pendekin. Semua hak cipta dilindungi.</span>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $('#shorten-form').on('submit', function(event) {
+            event.preventDefault();
+            const original_url = $('#original_url').val();
+            if (!isValidUrl(original_url)) {
+                alert('URL yang dimasukkan tidak valid. Silakan masukkan URL yang benar.');
+                return;
+            }
+
+            $.ajax({
+                url: '/shorten',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ original_url }),
+                success: function(response) {
+                    $('#result').html(`<a href="${response.shortlink}" target="_blank">${response.shortlink}</a>`);
+                }
+            });
+        });
+
+        function isValidUrl(string) {
+            try {
+                new URL(string);
+                return true;
+            } catch (_) {
+                return false;
+            }
+        }
+    </script>
+</body>
+</html>
